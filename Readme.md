@@ -30,3 +30,26 @@ Esta estructura ayuda a que la aplicación sea fácilmente extensible y testeabl
 ## Dependencias
 
 pip install "fastapi[standard]" 
+pip install -qU langchain-ollama   
+pip install -qU langchain-openai
+
+pip install langchain-core langgraph>0.2.27
+pip install -qU langchain-openai
+
+%pip install -qU pypdf
+pip install langchain-community
+pip install -U langchain_openai
+pip install -qU langchain-ollama
+
+
+### Test
+uvicorn main:router --reload
+
+Postman 
+curl --location 'http://127.0.0.1:8000/chat' \
+--header 'Content-Type: application/json' \
+--data '{
+    "input_language": "English",
+    "output_language": "Spanish",
+    "question": "I love programming."
+}'

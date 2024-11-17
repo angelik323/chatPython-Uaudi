@@ -3,7 +3,7 @@ from adapters.primary.api.chat_controller import router
 
 app = FastAPI()
 
-# Incluir el router para los endpoints del chat
+# Include the router for the chat endpoints
 app.include_router(router)
 
 if __name__ == "__main__":

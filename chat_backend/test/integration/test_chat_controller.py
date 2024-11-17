@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-from adapters.secondary.langchain.chat_ollama_adapter import ChatOllamaAdapter
 from main import router  # Suponiendo que tu archivo principal tenga el nombre main.py
 
 # Utilizamos el TestClient de FastAPI
