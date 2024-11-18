@@ -11,11 +11,12 @@ class ChatAdapterFactory:
     def __init__(self):
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
+            print("Error: OPENAI_API_KEY no está configurado.")
             raise ValueError("The OPENAI_API_KEY environment variable is not set.")
 
         self.adapters = {
             "ollama": ChatOllama(
-                model="llama3.1",
+                model="llama3.2",
                 temperature=0,
             ),
             "openai": ChatOpenAI(
@@ -24,7 +25,7 @@ class ChatAdapterFactory:
                 max_tokens=None,
                 timeout=None,
                 max_retries=2,
-                api_key=os.getenv("OPENAI_API_KEY")
+                api_key=api_key
             )
         }
 
