@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b4a52cf-34ff-4591-998d-955680dcd053" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/project-root/src/chat_backend/adapters/secondary/langchain/chat_adapter_factory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/chatAudifarma.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/chatAudifarma.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/Readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project-root/src/chat_backend/adapters/primary/api/chat_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/project-root/src/chat_backend/adapters/primary/api/chat_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project-root/src/chat_backend/adapters/secondary/langchain/chat_ollama_adapter.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/project-root/src/chat_backend/application/use_cases/ask_question.py" beforeDir="false" afterPath="$PROJECT_DIR$/project-root/src/chat_backend/application/use_cases/ask_question.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project-root/src/chat_backend/test/integration/test_chat_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/project-root/src/chat_backend/test/integration/test_chat_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project-root/src/chat_backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/project-root/src/chat_backend/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,14 +34,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/CenApoAdm03/Documents/angelika/chatAudifarma/project-root/src/chat_backend/adapters/secondary/openia"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/CenApoAdm03/Documents/angelika/chatAudifarma/project-root/src/chat_backend/adapters/secondary/openia&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\CenApoAdm03\Documents\angelika\chatAudifarma\project-root\src\chat_backend\adapters\secondary\openia" />
