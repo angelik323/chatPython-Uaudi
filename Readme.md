@@ -34,6 +34,7 @@ pip install -qU langchain-ollama
 pip install -qU langchain-openai
 
 pip install langchain-core langgraph>0.2.27
+pip install -qU langchain-openai
 
 
 Test

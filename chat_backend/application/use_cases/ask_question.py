@@ -2,7 +2,9 @@ from adapters.secondary.langchain.chat_adapter_factory import ChatAdapterFactory
 
 from typing import Dict, Optional
 
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import AIMessage, trim_messages
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, MessagesState, StateGraph
@@ -27,13 +29,26 @@ class UserContext:
 user_context = UserContext()
 
 # Define the function that calls the model
-def call_model(state: MessagesState):
+def call_model(state: MessagesState, use_trim: bool = False, max_tokens: int = 2048):
+    # Decide if we need to trim the messages
+    if use_trim:
+        trimmed_messages = trim_messages(
+            messages=state["messages"],
+            max_tokens=max_tokens,  # Ajusta según el límite de tokens del modelo
+            token_counter=lambda messages: sum(len(message.content.split()) for message in messages),
+            start_on="human",
+            strategy="last",
+            include_system=True
+        )
+    else:
+        trimmed_messages = state["messages"]
+
     # Get adapter for the model
     model_name = state.get("model", "ollama")
     chat_adapter = ChatAdapterFactory().get_adapter(model_name)
-    # Invoke the model with the messages in the state
-    response = chat_adapter.invoke(state["messages"])
-    return {"messages": state["messages"] + [AIMessage(content=response.content)]}
+    # Invoke the model with the trimmed or full messages
+    response = chat_adapter.invoke(trimmed_messages)
+    return {"messages": trimmed_messages + [AIMessage(content=response.content)]}
 
 # Define the (single) node in the graph
 workflow.add_edge(START, "model")
@@ -45,41 +60,54 @@ langgraph_app = workflow.compile(checkpointer=memory)
 
 # Modify use case to interact with different LLMs
 class AskQuestionUseCase:
-    def execute(self, session_id: str, query: str, model: str, additional_params: Optional[Dict[str, str]] = None) -> str:
-        # Update user context if the query provides user information
+    def execute(self, session_id: str, query: str, model: str, additional_params: Optional[Dict[str, str]] = None, use_trim: bool = False, max_tokens: int = 2048) -> str:
+        self._update_user_context(session_id, query)
+        user_name = user_context.get_context(session_id, "name")
+        template_messages = self._prepare_template_messages(query, user_name, additional_params)
+        prompt_value = self._create_prompt(template_messages, query)
+        return self._invoke_langgraph_app(session_id, prompt_value, model, use_trim, max_tokens)
+
+    def _update_user_context(self, session_id: str, query: str):
         if "soy" in query.lower():
             name = query.split("soy")[-1].strip().split(",")[0].strip()
             user_context.update_context(session_id, "name", name)
 
-        # Retrieve user context if available
-        user_name = user_context.get_context(session_id, "name")
-
-        # Prepare input message based on query context
+    def _prepare_template_messages(self, query: str, user_name: Optional[str], additional_params: Optional[Dict[str, str]]) -> list:
         if additional_params and "query_type" in additional_params:
             query_type = additional_params["query_type"].lower()
             if query_type == "company_info":
-                message_content = f"You are an assistant for Audifarma. You answer questions about company details, such as office hours, contact numbers, and services offered.\n"
-                if user_name:
-                    message_content += f"Hello {user_name}! "
-                message_content += f"Human: {query}"
-                message = HumanMessage(content=message_content)
+                template_messages = [
+                    ("system", "You are an assistant for Audifarma. You answer questions about company details, such as office hours, contact numbers, and services offered."),
+                    ("human", f"Hello {user_name}!" if user_name else query),
+                    ("human", query)
+                ]
             elif query_type == "translation":
                 input_language = additional_params.get("input_language", "English")
                 output_language = additional_params.get("output_language", "Spanish")
-                message = HumanMessage(content=f"You are a helpful assistant that translates {input_language} to {output_language}.\nHuman: {query}")
+                template_messages = [
+                    ("system", f"You are a helpful assistant that translates {input_language} to {output_language}."),
+                    ("human", query)
+                ]
             else:
-                message = HumanMessage(content=f"You are a helpful assistant.\nHuman: {query}")
+                template_messages = [
+                    ("system", "You are a helpful assistant."),
+                    ("human", query)
+                ]
         else:
-            message_content = f"You are a helpful assistant.\n"
-            if user_name:
-                message_content += f"Hello {user_name}! "
-            message_content += f"Human: {query}"
-            message = HumanMessage(content=message_content)
+            template_messages = [
+                ("system", "You are a helpful assistant."),
+                ("human", f"Hello {user_name}!" if user_name else query)
+            ]
 
-        # Invoke the LangGraph app with the current message and session configuration
-        input_messages = {"messages": [message], "model": model}
+        return template_messages
+
+    def _create_prompt(self, template_messages: list, query: str) -> ChatPromptTemplate:
+        prompt_template = ChatPromptTemplate(template_messages)
+        return prompt_template.invoke({"user_input": query})
+
+    def _invoke_langgraph_app(self, session_id: str, prompt_value: ChatPromptTemplate, model: str, use_trim: bool, max_tokens: int) -> str:
+        input_messages = {"messages": prompt_value.messages, "model": model}
         config = {"configurable": {"thread_id": session_id}}
-        output = langgraph_app.invoke(input_messages, config)
-
-        # Return the last AI message
+        state = MessagesState(**input_messages)
+        output = call_model(state, use_trim, max_tokens)
         return output["messages"][-1].content
