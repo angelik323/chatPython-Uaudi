@@ -9,13 +9,12 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_ollama import OllamaEmbeddings
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, MessagesState, StateGraph
 
+
 # Load PDF documents as knowledge base
-
-vector_store = None  # Define vector_store globally
-
 
 def load_documents():
     file_path = "../doc2.pdf"
@@ -48,6 +47,9 @@ class UserContext:
 
 # Create a global user context object
 user_context = UserContext()
+
+# Define a global vector store variable
+vector_store = None
 
 
 # Define the function that calls the model
@@ -90,13 +92,16 @@ class AskQuestionUseCase:
         user_name = user_context.get_context(session_id, "name")
         template_messages, use_rag = self._prepare_template_messages(query, user_name, additional_params)
 
-        global vector_store
         if use_rag:
             # Cargar documentos y crear el vector store si no existe
+            global vector_store
             if vector_store is None:
                 try:
                     pages = load_documents()
-                    vector_store = InMemoryVectorStore.from_documents(pages, OpenAIEmbeddings())
+                    if model == "ollama":
+                        vector_store = InMemoryVectorStore.from_documents(pages, OllamaEmbeddings(model="llama3"))
+                    else:
+                        vector_store = InMemoryVectorStore.from_documents(pages, OpenAIEmbeddings())
                     print(f"Loaded {len(pages)} pages from knowledge base.")
                 except FileNotFoundError as e:
                     print(e)

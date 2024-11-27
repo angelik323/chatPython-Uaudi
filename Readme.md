@@ -39,6 +39,7 @@ pip install -qU langchain-openai
 %pip install -qU pypdf
 pip install langchain-community
 pip install -U langchain_openai
+pip install -qU langchain-ollama
 
 
 Test
