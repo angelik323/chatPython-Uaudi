@@ -17,6 +17,7 @@ router = APIRouter()
 
 @router.post("/chat")
 async def ask_question(request: QuestionRequest):
+    print('hola mundo')
     try:
         use_case = AskQuestionUseCase()
         response = use_case.execute(request.session_id, request.query, request.model, request.additional_params)

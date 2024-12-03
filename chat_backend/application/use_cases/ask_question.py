@@ -49,7 +49,9 @@ class AskQuestionUseCase:
     def execute(self, session_id: str, query: str, model: str, additional_params: Optional[Dict[str, str]] = None) -> str:
         self._update_user_context(session_id, query)
         user_name = user_context.get_context(session_id, "name")
+        print('prepare template')
         template_messages = self._prepare_template_messages(query, user_name, additional_params)
+        print('create promt')
         prompt_value = self._create_prompt(template_messages, query)
         return self._invoke_langgraph_app(session_id, prompt_value, model)
 
