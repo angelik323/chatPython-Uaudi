@@ -21,6 +21,7 @@ async def ask_question(request: QuestionRequest):
     try:
         use_case = AskQuestionUseCase()
         response = use_case.execute(request.session_id, request.query, request.model, request.additional_params)
+        print('antes de responder')
         return {"response": response}
     except Exception as e:
         return {"error": str(e)}

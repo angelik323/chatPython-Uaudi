@@ -38,6 +38,8 @@ pip install langchain-core langgraph>0.2.27
 
 Test
 uvicorn main:router --reload
+uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+
 
 Postman 
 curl --location 'http://127.0.0.1:8000/chat' \
