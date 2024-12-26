@@ -1,14 +1,47 @@
+# backend_chatIA_Uaudi
+Development with python apikey GPT
+
 # Arquitectura del Proyecto
 
 Este proyecto sigue el principio de la Arquitectura Hexagonal (también conocida como Arquitectura Limpia), organizando los diferentes componentes para maximizar la separación de responsabilidades y la facilidad de mantenimiento.
 
 ## Estructura de Directorios
 
-\project-root/`  
-\│           ├── src/  `  
-`│                  ├── application/  `
-│ │ ├── use_cases/ # Casos de uso - Contiene la lógica de negocio │ │ └── init.py │ │  
-│ ├── domain/ │ │ ├── entities/ # Entidades de Dominio - Representan los objetos principales del negocio │ │ └── init.py │ │ │ ├── infrastructure/ │ │ ├── adapters/ │ │ │ ├── input/ # Adaptadores de entrada - Controladores para la gestión de las entradas │ │ │ │ ├── controllers/ # Controladores - Gestionan la comunicación entre la aplicación y el mundo exterior │ │ │ │ └── init.py │ │ │ ├── output/ # Adaptadores de salida - Comunicación con infraestructura externa (bases de datos, APIs, etc.) │ │ │ └── init.py │ │ └── init.py │ │ │ ├── ports/ │ │ ├── input/ # Puertos de entrada - Interfaces que describen cómo la aplicación interactúa con la capa de infraestructura │ │ ├── output/ # Puertos de salida - Interfaces para los adaptadores de salida │ │ └── init.py │ │ │ └── init.py │ └── tests/ # Pruebas - Contiene las pruebas unitarias y de integración ├── application/ ├── domain/ ├── infrastructure/ └── init.py
+project-root/
+│
+├── src/
+│   ├── application/
+│   │   ├── use_cases/          # Casos de uso - Contiene la lógica de negocio
+│   │   └── __init__.py
+│   │
+│   ├── domain/
+│   │   ├── entities/           # Entidades de Dominio - Representan los objetos principales del negocio
+│   │   └── __init__.py
+│   │
+│   ├── infrastructure/
+│   │   ├── adapters/
+│   │   │   ├── input/          # Adaptadores de entrada - Controladores para la gestión de las entradas
+│   │   │   │   ├── controllers/   # Controladores - Gestionan la comunicación entre la aplicación y el mundo exterior
+│   │   │   │   └── __init__.py
+│   │   │   ├── output/         # Adaptadores de salida - Comunicación con infraestructura externa (bases de datos, APIs, etc.)
+│   │   │   └── __init__.py
+│   │   └── __init__.py
+│   │
+│   ├── ports/
+│   │   ├── input/              # Puertos de entrada - Interfaces que describen cómo la aplicación interactúa con la capa de infraestructura
+│   │   ├── output/             # Puertos de salida - Interfaces para los adaptadores de salida
+│   │   └── __init__.py
+│   │
+│   └── __init__.py
+│
+├── tests/                      # Pruebas - Contiene las pruebas unitarias y de integración
+│   ├── application/
+│   ├── domain/
+│   ├── infrastructure/
+│   └── __init__.py
+
+
+
 
 ### Descripción de las Carpetas
 
@@ -34,16 +67,12 @@ pip install -qU langchain-ollama
 pip install -qU langchain-openai
 
 pip install langchain-core langgraph>0.2.27
-pip install -qU langchain-openai
-
-%pip install -qU pypdf
-pip install langchain-community
-pip install -U langchain_openai
-pip install -qU langchain-ollama
 
 
-### Test
+Test
 uvicorn main:router --reload
+python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+
 
 Postman 
 curl --location 'http://127.0.0.1:8000/chat' \
