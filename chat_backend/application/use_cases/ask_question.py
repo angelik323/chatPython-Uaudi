@@ -100,6 +100,8 @@ class AskQuestionUseCase:
                     pages = load_documents()
                     if model == "ollama":
                         vector_store = InMemoryVectorStore.from_documents(pages, OllamaEmbeddings(model="llama3.2"))
+
+                        
                     else:
                         vector_store = InMemoryVectorStore.from_documents(pages, OpenAIEmbeddings())
                     print(f"Loaded {len(pages)} pages from knowledge base.")
