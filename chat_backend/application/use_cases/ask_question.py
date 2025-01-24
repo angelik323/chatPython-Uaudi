@@ -16,6 +16,7 @@ from langgraph.graph import START, MessagesState, StateGraph
 
 # Load PDF documents as knowledge base
 
+
 def load_documents():
     file_path = "../doc2.pdf"
     if not os.path.exists(file_path) or not os.path.isfile(file_path):
@@ -101,7 +102,7 @@ class AskQuestionUseCase:
                     if model == "ollama":
                         vector_store = InMemoryVectorStore.from_documents(pages, OllamaEmbeddings(model="llama3.2"))
 
-                        
+
                     else:
                         vector_store = InMemoryVectorStore.from_documents(pages, OpenAIEmbeddings())
                     print(f"Loaded {len(pages)} pages from knowledge base.")
